@@ -1,0 +1,1777 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 25.01.0 ] */
+/* [wxMaxima: title   start ]
+test gw binary
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: section start ]
+Inspiral Phase Time Evolution
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Variables and Constants
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+kill(all);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsubsect start ]
+Setting up the Mass Parameters
+   [wxMaxima: subsubsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Change here the mass parameters
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xlow : 0.0336997;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+m1 : 20; m2 : 20;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+q : m1/m2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+M : m1+m2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+%mu : (m1*m2)/M;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+η:%mu/M;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Geometric Units
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+ Ms = M * (4.923 * 10^-6));(*Expressing mass in seconds*)
+-- a line from pdf made from nb by Mathematica
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Ms : M*(4.923*10^(-6)); /*Expressing mass in seconds*/
+
+Mr : M*(1.476); /*Expressing mass in kilometers*/
+
+γ : 0.5772156649;
+/*Euler-Mascheroni constant defined by author, below we use internal value from MAXIMA*/
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(%gamma);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(%e);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+redefine Euler-Mascheroni, using internal MAXIMA constants:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+γ:float(%gamma);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+e:0; /*eccentricity*/;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+R : 1; /*Distance to the observer - Can change R to fit as desired*/
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+i : 0; κ : 0; /*assume optimal orientation of observer*/
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+flow : 10; /* cut-off frequency of 10 Hz */
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+G : 6.673*10^(-11); c : 2.998*10^8; /* SI units later use MAXIMA phys.constants */
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Mo_kg : 1.989*10^30;
+Mo_s :  4.923*10^(-6);
+Mo_km : 1.476;
+/*Expressing solar mass in kg, sec. or km*/
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Ms : M*Mo_s;
+Mr :  M*Mo_km;
+/*BH mass in seconds and kilometers*/
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+v0 : float((G*M*Mo_kg*π*flow)^(1/3))
+/*initial binary velocityfrom Kepler's law*/;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(π);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(%pi);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xlow;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xhigh : float( 1/6 * (1 + 7/18 *η)) /* 2nd order PN xhigh */;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+temp : 100;
+/*temporary final integration time, set up to something bigtime */
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsubsect start ]
+First Level, constants
+   [wxMaxima: subsubsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+α0 : 153.8803; α1 : -55.13; α2 : 588; α3 : -1144;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsubsect start ]
+Second level, depending on the symmetric mass ratio
+   [wxMaxima: subsubsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+a4 : -5*η*α0 - (97*η^4)/3888 - (18929389*η^3)/
+  435456 - (3157*float(π)^2*η^2)/144 + (54732199*η^2)/93312 -
+  47468/315*η*log(x(t)) - (31495*float(π)^2*η)/8064 - (
+  856*γ*η)/315 + (59292668653*η)/838252800 -
+  1712/315*η*float(log(2)) + 124741*log(x(t))/8820 - (361*float(π)^2)/
+  126 + (124741*γ)/4410 + 3959271176713/25427001600 - (
+  47385*float(log(3)) )/1568 + (127751*float ( log(2) ) )/1470;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(log(2));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+a4p5 : (9731*float(π)*η^3)/1344 + (42680611*float(π)*η^2)/
+  145152 + (205*float(π)^3*η)/6 - (51438847*float(π)*η)/48384 -
+  float(3424/105 *π)*log(x(t)) - (6848*γ*float(π))/105 + (
+  343801320119* float(π))/745113600 - 13696/105* float(π* log(2));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+a4p5;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+π*η*α*γ;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+a5 :float( (155*α0*η^2)/12 + (1195*α0*η)/336 -
+  6*η*α1 - (11567*η^5)/62208 + (51474823*η^4)/
+  1741824 + (9799*π^2*η^3)/384 - (9007776763*η^3)/
+  11757312 + 216619/189*η^2*log(x(t)) - (
+  126809*π^2*η^2)/3024 - (2354*γ*η^2)/945 + (
+  1362630004933*η^2)/914457600 - 4708/945*η^2*log(2) + (
+  53963197*η*log(x(t)))/52920 + (14555455*π^2*η)/
+  217728 + (3090781*γ*η)/26460 - (847101477593593*η)/
+  228843014400 - (15795*η*log(3))/3136 + (2105111*η*log(2))/
+  8820 - (5910592*log(x(t)))/1964655 - (21512*π^2)/1701 - (
+  11821184*γ)/1964655 + 29619150939541789/36248733480960 + (
+  616005*log(3))/3136 - (107638990*log(2))/392931);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(4068287915/12573792);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Thus the coefficient before log(x(t)) coincides with original -- it is much more economical to put one float around the whole expression than around each %pi, log, etc.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+a5p5 : float(-20*π*η*α0 + (49187*π*η^4)/6048 - (
+  7030123*π*η^3)/13608 - (112955*π^3*η^2)/576 + (
+  1760705531*π*η^2)/290304 -
+  189872/315*π*η*log(x(t)) - (26035*π^3*η)/16128 - (
+  3424*γ*π*η)/315 - (2437749208561*π*η)/
+  4470681600 - 6848/315*π*η*log(2) + (
+  311233 *π*log(x(t)))/11760 + (311233*γ*π)/5880 + (
+  91347297344213*π)/81366405120 - 142155/784* π*log(3) + (
+  5069891 *π*log(2))/17640);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(4382717*π/35280); /*совпадает с оригиналом в nb */
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+a6 :  -((535 *α0*η^3)/36) + (7295 *α0*η^2)/
+  336 - (248065 *α0*η)/4536 + (31 *α1*η^2)/2 + (
+  239 *α1*η)/56 - 7 *α2*η -
+  7 *α3*η*log(x(t)) - α3*η - (155377* η^6)/
+  1679616 - (152154269*η^5)/10450944 - (
+  1039145*π^2*η^4)/62208 + (76527233921*η^4)/
+  94058496 - (41026693*η^3*log(x(t)) )/17010 + (
+  55082725*π^2*η^3)/217728 - (2033*γ*η^3)/
+  1701 - (56909847373567*η^3)/7242504192 - (
+  4066*η^3*log(2))/1701 - (271237829*η^2*log(x(t)))/
+  127008 + (92455*π^4*η^2)/1152 - (
+  4061971769*π^2*η^2)/870912 - (21169753*γ*η^2)/
+  317520 + (3840832667727673*η^2)/55477094400 - (
+  57915*η^2*log(3) )/12544 - (2724535*η^2*log(2) )/21168 -
+  4387/63*π^2*η*log(x(t)) - (12030840839*η*log(x(t)) )/
+  37721376 + (410*π^4*η)/9 -
+  8774/63* γ*π^2*η + (206470485307*π^2*η)/
+  1005903360 + (362623282541*γ*η)/94303440 - (
+  12413297162366594971*η)/271865501107200 + (
+  3016845*η*log(3) )/12544 - 17548/63*π^2*η*log(2) + (
+  701463800861*η*log(2) )/94303440 + (366368*log(x(t))^2)/
+  11025 + (2930944*log(2)* log(x(t)) )/11025 -
+  13696/315 *π^2*log(x(t)) + (1465472* γ*log(x(t)) )/11025 - (
+  155359670313691*log(x(t)) )/157329572400 - (27392*bfzeta(3, 25) )/
+  105 - (256 *π^4)/45 - (27392 *γ*π^2)/315 + (
+  1414520047 *π^2)/2619540 + (1465472* γ^2)/11025 - (
+  155359670313691*γ)/78664786200 + 1867705968412371074441833/
+  154211174411374080000 + (5861888*log(2)^2)/11025 - (
+  37744140625*log(5))/260941824 - (63722699919*log(3) )/112752640 -
+  54784/315* π^2*log(2) + (5861888*γ*log(2))/11025 - (
+  206962178724547* log(2) )/78664786200;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(366368/11025); /* gives 33.23065759637188 */
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(zeta(3));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+with accuracy of 35 digits:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+bfzeta(3,35);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsubsect start ]
+Calculating PN Parameter-x for e =0 (zero eccentricity)
+   [wxMaxima: subsubsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Expr3p5PN(t):=
+ 64/5*η*
+   x(t)^5*(1 + (-743/336 - 11/4*η)*x(t) +
+     4* π*x(t)^(3/2) + (34103/18144 + 13661/2016*η + 59/18*η^2)*
+      x(t)^2+ ((-4159* π)/672 - (189* π)/8*η)*x(t)^(5/2)
+     + (16447322263/139708800 - (1712 *γ)/105 + (16* π^2)/3
+        - 856/105*log(16*x(t)) + (-56198689/217728 + (451* π^2)/48)*η
+        + 541/896*η^2 - 5605/2592*η^3)*x(t)^3) + (64* π)/
+   5*η*x(t)^5*(-(4415/4032) + 358675/6048*η + 91945/1512*η^2) *x(t)^(7/2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Expr4to6(t):= (64*η*x(t)^5)/
+  5*(a4*x(t)^4 + a4p5*x(t)^(9/2) + a5*x(t)^5 + a5p5*x(t)^(11/2) +
+    a6*x(t)^6);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+/*  dx/dt */
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Expr6PN:Simplify( (Expr3p5PN(t) + Expr4to6(t))/Ms);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Expand((Expr3p5PN(t) + Expr4to6(t))/Ms);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(ratsimp( (Expr3p5PN(t) + Expr4to6(t))/Ms));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+1.5764006955363392*^6
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+5.836210774091883*10^85*x(t)^8*log(16).
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Mathematica (!)
+16250.253910217347 x[t]^5 
+- 47106.390799261004 x[t]^6 
++ 204206.71321323048 x[t]^(13/2) 
++ 61401.71516127911 x[t]^7 
+- 617482.2042400066 x[t]^(15/2) 
++ 1.5764006955363392*10^6  x[t]^8 
+- 132478.26044901 Log[x[t]] x[t]^8 
++ 895029.2790501764 x[t]^(17/2) 
++ 123797.44412168585 x[t]^9 
+- 382369.2114803807 Log[x[t]] x[t]^9 
++ 8.69710450192621*10^6 x[t]^(19/2) 
+- 1.6647709191478603*10^6 Log[x[t]] x[t]^(19/2) 
++ 6.7256890379204955*10^6 x[t]^10 
++ 5.257818134626271*10^6  Log[x[t]] x[t]^10 
++ 2.492620544707385*10^7  x[t]^(21/2) 
+- 6.341980112767503*10^6 Log[x[t]] x[t]^(21/2) 
++ 3.383677043427297*10^7 x[t]^11 
++ 6.884883225084361*10^6 Log[x[t]] x[t]^11 
++ 540006.623544536 Log[x[t]]^2 x[t]^11
+
+
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Maxima
+16250.253910217349 x[t]^5 
+ -47106.390799261 x[t]^6 
+ +204206.7132132305 x[t]^(13/2) 
+ +61401.71516127913 x[t]^7 
+ -617482.2042400066 x[t]^(15/2) 
+  +1576400.6955359334 x[t]^8 
+ -132478.26044901 Log[x[t]] x[t]^8 
+ +895029.2790501763 x[t]^(17/2) 
+ +123797.44412237317 x[t]^9 
+ -382369.2114803807 Log[x[t]] x[t]^9 
++ 8697104.501921108 x[t]^(19/2) 
+ -1664770.9191478586 Log[x[t]] x[t]^(19/2) 
+ +6725689.037921073 x[t]^10 
+  + 5257818.13462627 Log[x[t]] x[t]^10 
+  +2.4926205447077777*10^7 x[t]^(21/2) 
+ -6341980.112767509 Log[x[t]] x[t]^(21/2) 
+ +3.383677043423071*10^7 x[t]^11 
++ 6884883.225087664 Log[x[t]] x[t]^11 
++540006.623544536  Log[x[t]]^2 x[t]^11
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+float(log(%e));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+16250.253910217349
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+7.158903402799624*2.2699361893697823*10^3;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+-47106.390799261
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+-2.2699361893697823*2.0752297364067958*10^4;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+204206.7132132305
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*8.996143335197708*10^4;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+61401.71516127913
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*2.70499741132928*10^4;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+-617482.2042400066
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+-2.2699361893697823*2.7202623894526406*10^5;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+1576400.6955359334
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+-2.2699361893697823*5.836210774091884*log(16.0)*10^4+2.2699361893697823*8.56283289152039*10^5;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+-132478.26044901
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+-2.2699361893697823*5.836210774091884*10^4;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+895029.2790501763
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*3.942971098666299*10^5;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+koef x^9:
+Mathematica:
+123797.44412168585
+Maxima
+123797.44412237317
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*5.4537852078011004*10^4;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+-382369.2114803807
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+-2.2699361893697823*1.6844932173469615*10^5;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+8697104.501921108
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*3.8314312722313767*10^6;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+-1664770.9191478586
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+-2.2699361893697823*7.333998757075459*10^5;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+6725689.037921073
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*2.962941896524576*10^6;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+5257818.13462627
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*2.3162845542746438*10^6;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+2.4926205447077777*10^7
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*1.0981015926266281*10^7;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+-6341980.112767509
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+-2.2699361893697823*2.793902375964267*10^6;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+3.383677043423071*10^7
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*1.490648529799643*10^7;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+koef log(x)*x^11:
+Mathematica:
+6.884883225084361*10^6
+Maxima
+6884883.225087664
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*3.0330734658224734*10^6;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+540006.623544536
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+2.2699361893697823*2.3789506774393584*10^5;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Аналитическое взятие интеграла
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Решим уравнение Expr6PN аналитически методом теории возмущений. Запишем само уравнение:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Expr6PN;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Expr6N_new(z):= 16250.253910217349*z^5 
+ -47106.390799261*z^6 
+ +204206.7132132305*z^(13/2) 
+ +61401.71516127913*z^7 
+ -617482.2042400066*z^(15/2) 
+  +1576400.6955359334*z^8 
+ -132478.26044901*log(z)*z^8 
+ +895029.2790501763*z^(17/2) 
+ +123797.44412237317*z^9 
+ -382369.2114803807*log(z)*z^9 
++ 8697104.501921108*z^(19/2) 
+ -1664770.9191478586 *log(z)*z^(19/2) 
+ +6725689.037921073*z^10 
+  + 5257818.13462627*log(z)*z^10 
+  +2.4926205447077777*10^7*z^(21/2) 
+ -6341980.112767509*log(z)*z^(21/2) 
+ +3.383677043423071*10^7*z^11 
++ 6884883.2254087664*log(z)*z^11 
++540006.623544536 *log(z)^2*z^11
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Expr_an_old(z):=-1/(16250.253910217349)^2*z^(-10)*Expr6N_new(z);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Expr_an(z):=-(16250.253910217349)^(-1)*z^(-5)*(-2+Expr6N_new(z)*(16250.253910217349)^(-1)*z^(-5));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+\int f(x) = F(x) - неопределённый интеграл. Пределы интеграла не нужны!
+Справа из \int dt имеем t+C. Где C константа. Значит:
+ F(x) = t+C
+При t=0 задано начальное x=xlow, значит и C знаем через сложную формулу F(xlow).
+А это C и даёт нам t=tcr для времени выхода на режим обострения.
+Теперь при любом x мы знаем t, и строим график x(t). Его сравниваем с решением из Рунге-Кутта.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+result(z):=-integrate(Expr_an(z), z);
+/* [wxMaxima: input   end   ] */
+/* [wxMaxima: question  start ] */
+<math><st>Is </st><mn>113942177</mn><h>*</h><mi lisp="*var-tag*">xfin</mi><mo>-</mo><mn>3839821</mn><st> positive, negative or zero?</st></math>
+/* [wxMaxima: question  end   ] */
+/* [wxMaxima: answer  start ] */
+result:integrate(Expr6N_new(z), z, xlow, 3)$
+/* [wxMaxima: answer  end   ] */
+/* [wxMaxima: question  start ] */
+<math><st>Is </st><mi lisp="*var-tag*">xlow</mi><mo>-</mo><mn>1</mn><st> positive, negative or zero?</st></math>
+/* [wxMaxima: question  end   ] */
+/* [wxMaxima: answer  start ] */
+result:integrate(Expr6N_new(z), z, 0.03, 3)$
+/* [wxMaxima: answer  end   ] */
+
+
+/* [wxMaxima: input   start ] */
+tres:result(z);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+tres;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+define(tres(z), tres);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xlow;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+tres(xlow);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+/*tres(z) := 625.0076661395092*z^(12)*(72*log(z)^2-12*log(z)+1)+6884883.225087664*(z^(12)*log(z)/12-z^(12)/144)-2.5367920451070037*10^7*(z^(23/2)*log(z)/46-z^(23/2)/529)+
+5257818.13462627*(z^(11)*log(z)/11-z^11/121)-6659083.6765914345*(z^(21/2)*log(z)/42-z^(21/2)/441)-382369.2114803807*(z^(10)*log(z)/10-z^(10)/100)-132478.26044901*(z^9*log(z)/9-z^9/81)+
+2819730.8695192253*z^(12)+2167496.12583285*z^(23/2)+611426.276174643*z^(11)+828295.6668496293*z^(21/2)+12379.744412237318*z^(10)+94213.60832107118*z^(19/2)+
+175155.63283732592*z^9-72644.96520470666*z^(17/2)+7675.214395159891*z^8+27227.561761764067*z^(15/2)-6729.484399894428*z^7+2708.3756517028914*z^6;*/;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+tS:11.924777117026338 ;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+tF :2*Ms; Tfin : tS - tF;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+nzstep:10000;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+t_arr:makelist(tres(xlow+i*0.3/nzstep),i,0,nzstep,1)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+z_arr:makelist(xlow+i*0.3/nzstep,i,0,nzstep,1)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+t_arr_real:makelist(Tfin-tres(xlow+i*0.3/nzstep),i,0,nzstep,1)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Tfin;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+points: makelist([t_arr_real[i], z_arr[i]], i, 1, length(z_arr))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+grid2d(true, true);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+p:"set term pngcairo font 'Arial,24'";
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([discrete, points], [x, -1, 13], [y, 0, 0.35], [style, [lines,5]], 
+    [xlabel, "t, s"], [ylabel, "x"], [gnuplot_preamble, p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+попробуем нарисовать то же самое, но покороче
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lensol_an:length(points);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+points[lensol_an];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lenplot_an:floor(1*lensol_an/15);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+shortsol_an:makelist(points[i], i, lenplot_an, lensol_an)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+p:"set term pngcairo font 'Arial,24'";
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, shortsol_an], [ t, 0, Tfin ] , [style,[lines,5]],[xlabel, "t, s"], [ylabel, "x"],[gnuplot_preamble, p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsubsect start ]
+Setting up the final integration time (Рунге-Кутта)
+   [wxMaxima: subsubsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ft: 16250.253910217349*z^5 
+ -47106.390799261*z^6 
+ +204206.7132132305*z^(13/2) 
+ +61401.71516127913*z^7 
+ -617482.2042400066*z^(15/2) 
+  +1576400.6955359334*z^8 
+ -132478.26044901*log(z)*z^8 
+ +895029.2790501763*z^(17/2) 
+ +123797.44412237317*z^9 
+ -382369.2114803807*log(z)*z^9 
++ 8697104.501921108*z^(19/2) 
+ -1664770.9191478586 *log(z)*z^(19/2) 
+ +6725689.037921073*z^10 
+  + 5257818.13462627*log(z)*z^10 
+  +2.4926205447077777*10^7*z^(21/2) 
+ -6341980.112767509*log(z)*z^(21/2) 
+ +3.383677043423071*10^7*z^11 
++ 6884883.225087664*log(z)*z^11 
++540006.623544536 *log(z)^2*z^11;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xlow:0.033699;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+tS:11.924777117026338 ;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+tF :2*Ms; Tfin : tS - tF;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Tinit : Tfin - 1;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+pointss : rk (ft, z, xlow, [ t, 0, tS, 0.001 ] )$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lensol:length(pointss);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+pointss[lensol];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lenplot:floor(5*lensol/6);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+shortsol:makelist(pointss[i], i, lenplot, lensol)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, shortsol], [ t, 0, Tfin ], [style,[lines,5]], [xlabel, "t, s"], [ylabel, "x"], [gnuplot_preamble, p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Наложим графики аналитического и численного приближения  друг на друга для проверки , насколько они совпадают.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([ [discrete,points],[discrete,pointss]],[x,1,12],
+           [style,[lines,4]],[y,0,0.34],[ylabel,"x"],
+           [xlabel,"t, s"],[legend,"analytical sol","numerical sol"], [gnuplot_preamble, p])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Можно заметить, что есть явное расхождение в этих двух решениях. Предположу, что причина в разной точности методов решения.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([ [discrete,shortsol_an],[discrete,shortsol]],[x,9.5,12],
+           [style,[lines,4]],[y,0,0.34],[ylabel,"x"],
+           [xlabel,"t, s"],[legend,"analytical sol","numerical sol"], [gnuplot_preamble, p])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Orbital Frequency Evolution
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+для аналитической сделать!!
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+есть двумерный массив points (в нем лежат точки из аналитического решения), в нем первый элемент -- это время, а второй -- наш игрек, который надо в 3/2 возводить, чтобы получить  частоту эволюции орбиты.
+сначала пример, как нужная мне функция работает на простом примере:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+m_list: [[1,2], [1,2], [1,2]];
+new_m_list: map(lambda([x], cons(x[2]^2, rest(x))), m_list);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+а теперь уже посчитаем массив omega:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega: map(lambda([x], cons(x[1], cons(x[2]^(3/2)/Ms, rest(rest(x))))), points)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega_rk: map(lambda([x], cons(x[1], cons(x[2]^(3/2)/Ms, rest(rest(x))))), pointss)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega_rk$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+наложить рк на аналитику
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([ [discrete,omega],[discrete,omega_rk]],[x,1,12],
+           [style,[lines,4]],[y,0,500],[ylabel,"w, rad/s"],
+           [xlabel,"t, s"],[legend,"analytical sol","numerical sol"], [gnuplot_preamble, p])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+df;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Solving for the phase
+
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: subsect start ]
+for rk
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+m_list: [[1,2], [1,2], [1,2]];
+new_m_list: map(lambda([x], cons(x[2]^2, rest(x))), m_list);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+makelist(m_list[i][2], i, 1, length(m_list));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega_rk_2:makelist(omega_rk[i][2], i, 1, length(omega_rk))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+s_rk:makelist(0.001/2*(omega_rk_2[i]+omega_rk_2[i+1]), i, 1, length(omega_rk_2)-1)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+length(s_rk);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+s_rk_apd:append(s_rk, [s_rk[length(s_rk)]])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+length(s_rk_apd);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+phi_rk: [];
+current_sum: 0;
+
+for i: 1 thru length(s_rk_apd) do (
+    current_sum: current_sum + s_rk_apd[i],
+    phi_rk: append(phi_rk, [current_sum])
+);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+теперь есть массив с фазами в каждый момент времени. Далее надо вынуть массив отдельно времен, а потом построить график, где по игреку значения из phi_rk, а по иксу значения времени. Это будет график эволюции фазы.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_rk:makelist(omega_rk[i][1], i, 1, length(omega_rk_2))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+points_list: makelist([time_rk[i], phi_rk[i]], i, 1, length(time_rk))$
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+points_list$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+calculating the binaries separation:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r0pn:1$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r1pn:1/3*η-1;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r2pn:1/9*η^2+19/4*η;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r3pn:(-471521+38745/4*π)/181440;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xins_0:map(lambda([x], cons(x[1], cons(r0pn*x[2]^(-1), rest(rest(x))))), pointss)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xins_1:map(lambda([x], cons(x[1], cons(r1pn, rest(rest(x))))), pointss)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xins_2:map(lambda([x], cons(x[1], cons(r2pn*x[2], rest(rest(x))))), pointss)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xins_3:map(lambda([x], cons(x[1], cons(r3pn*x[2]^(2), rest(rest(x))))), pointss)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r_rk:makelist(M*xins_0[i][2]+M*xins_1[i][2]+M*xins_2[i][2]+M*xins_3[i][2], i, 1, length(xins_0))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r_and_t_rk;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+t_and_r_rk: makelist([time_rk[i], r_rk[i]], i, 1, length(r_rk))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+t_and_r_rk$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+calculation of the inspiral waveform
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+R:2.401*10^(19);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, t_and_r_rk], [ t, 0, 12 ], [style,[lines,5]], [xlabel, "t, s"], [ylabel, "r_{rk}"], [gnuplot_preamble, p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hre;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+не сделать дальше для численного решения, потому что нужна производная r, но ее непонятно откуда взять, так у нас нет явной формулы для численного решения, только точки
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+for analitycal
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega_an_2:makelist(omega[i][2], i, 1, length(omega))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an:makelist(omega[i][1], i, 1, length(omega_an_2))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+s_an:makelist((time_an[i+1]-time_an[i])/2*(omega_an_2[i]+omega_an_2[i+1]), i, 1, length(omega_an_2)-1)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+s_an_apd:append(s_an, [s_an[length(s_an)]])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+phi_an: [];
+current_sum: 0;
+
+for i: 1 thru length(s_an_apd) do (
+    current_sum: current_sum + s_an_apd[i],
+    phi_an: append(phi_an, [current_sum])
+);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+phi_an$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+phi_an_res:makelist([time_an[i], phi_an[i]], i, 1, length(time_an))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+phi_an_res$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([ [discrete,phi_an_res],[discrete,points_list]],[x,1,12],
+           [style,[lines,4]],[y,0,600],[ylabel,"phi, rad"],
+           [xlabel,"t, s"],[legend,"analytical sol","numerical sol"], [gnuplot_preamble, p])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xins_0_an:map(lambda([x], cons(x[1], cons(r0pn*x[2]^(-1), rest(rest(x))))), points)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xins_1_an:map(lambda([x], cons(x[1], cons(r1pn, rest(rest(x))))), points)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xins_2_an:map(lambda([x], cons(x[1], cons(r2pn*x[2], rest(rest(x))))), points)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+xins_3_an:map(lambda([x], cons(x[1], cons(r3pn*x[2]^(2), rest(rest(x))))), points)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r_an:makelist(M*xins_0_an[i][2]+M*xins_1_an[i][2]+M*xins_2_an[i][2]+M*xins_3_an[i][2], i, 1, length(xins_0_an))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+t_and_r_an: makelist([time_an[i], r_an[i]], i, 1, length(r_an))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([ [discrete,t_and_r_an],[discrete,t_and_r_rk]],[x,1,12],
+           [style,[lines,4]],[y,0,1200],[ylabel,"r separation"],
+           [xlabel,"t, s"],[legend,"analytical sol","numerical sol"], [gnuplot_preamble, p])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an$
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+R:2.401*10^(19);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ttt:x^2+1;
+define(ttt(x), ttt);
+diff(ttt(x), x);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r:M*(r0pn*x^(-1)+r1pn+r2pn*x+r3pn*x^2);
+define(r(x), r);
+r_x_diff:diff(r(x), x);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+t_x_diff:diff(tres(x),x);
+define(t_x_diff(x), t_x_diff);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r_dot:r_x_diff/t_x_diff;
+define(r_dot(x), r_dot)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+cos(%pi);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Mo_s;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega_an_2$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+points$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+x_res:makelist(points[i][2], i, 1, length(points))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x) := x^2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r_an_wave:r_an$
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+length(x_res);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+x_and_r_an_wave: makelist([x_res[i], r_an[i]], i, 1, length(r_an))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, x_and_r_an_wave], [style, [lines,4]], [xlabel, "x"], [ylabel, "r separation"] ,[gnuplot_preamble,p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+r_dot_an_wave: makelist(r_dot(x_res[i]),i,1,length(x_res))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+x_and_r_dot_an_wave: makelist([x_res[i], r_dot_an_wave[i]], i, 1, length(r_dot_an_wave))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+
+
+
+
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, x_and_r_dot_an_wave], [x, 0, 0.12],[ y, 0, 3000 ], [style, [lines,4]], [xlabel, "x"], [ylabel, "r_{dot} "] ,[gnuplot_preamble,p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hre:-2.*M*Mo_km*η/R*((-(r_dot_an_wave*Mo_s)^2+(r_an_wave*Mo_s)^2*omega_an_2^2+M/r_an_wave)*cos(2*phi_an)-2.*r_an_wave*r_dot_an_wave*Mo_s^2*omega_an_2*sin(2*phi_an))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+him:-2.*M*Mo_km*η/R*((-(r_dot_an_wave*Mo_s)^2+(r_an_wave*Mo_s)^2*omega_an_2^2+M/r_an_wave)*sin(2*phi_an)-2.*r_an_wave*r_dot_an_wave*Mo_s^2*omega_an_2*cos(2*phi_an))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+m_list: [[1,2], [1,2], [1,2]];
+m_list_1: [[1,2], [1,2], [1,2]];
+new_m_list: map(lambda([x], cons(x[2]^2, rest(x))), m_list);
+new_m_list_1:map(lambda([x], cons(x[2]^2, rest(x))), m_list_1);
+heheheh:new_m_list+new_m_list;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+func(x):=x^2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hre_2:func(hre)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+him_2:func(him)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hins_2:hre_2+him_2$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+func_2(x):=x^(1/2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+func_2(4);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hins:func_2(hins_2)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an_wave:makelist(points[i][1], i, 1, length(points))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an_wave_and_hins: makelist([time_an_wave[i], hins[i]], i, 1, length(time_an_wave))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, time_an_wave_and_hins],[x, 11, 11.9],[y,-5*10^(-19),5*10^(-19)],[style, [lines,4]], [xlabel, "time,s"], [ylabel, "A inspiral"] ,[gnuplot_preamble,p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hins_Tfin;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+length(hins);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hins_Tfin:hins[1001];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an_wave_and_hre: makelist([time_an_wave[i], hre[i]], i, 1, length(time_an_wave))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, time_an_wave_and_hre],[x, 11, 11.9],[y,-5*10^(-19),5*10^(-19)], [style, [lines,4]], [xlabel, "time,s"], [ylabel, "A inspiral"] ,[gnuplot_preamble,p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hre_hins_Tfin:hre/hins_Tfin$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an_wave_and_hre_hins_Tfin: makelist([time_an_wave[i], hre_hins_Tfin[i]], i, 1, length(time_an_wave))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, time_an_wave_and_hre_hins_Tfin],[x, 11, 11.9],[y,-5,5],[style, [lines,4]], [xlabel, "time,s"], [ylabel, "A inspiral"] ,[gnuplot_preamble,p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+time_an_wave_and_hre_hins_Tfin
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lensol_wave:length(time_an_wave_and_hre_hins_Tfin);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an_wave_and_hre_hins_Tfin$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, time_an_wave_and_hre_hins_Tfin],[x, 11, 11.9],[y,-5,5],[style, [lines,4]], [xlabel, "time,s"], [ylabel, "A inspiral"] ,[gnuplot_preamble,p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lensol_an:length(time_an_wave_and_hre_hins_Tfin);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+time_an_wave_and_hre_hins_Tfin[lensol_an];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lenplot_an:floor(1*lensol_an/1.7);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+shortsol_an:makelist(time_an_wave_and_hre_hins_Tfin[i], i, 1, lenplot_an)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, shortsol_an],[x, 11, 11.9],[y,-5,5],[style, [lines,4]], [xlabel, "time,s"], [ylabel, "A inspiral"] ,[gnuplot_preamble,p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lensol_an_wave:length(time_an_wave_and_hins);
+lenplot_an_wave:floor(1*lensol_an_wave/4);
+shortsol_an_wave:makelist(time_an_wave_and_hins[i], i, lenplot_an_wave, lensol_an_wave)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d( [discrete, shortsol_an_wave], [style, [lines,4]], [xlabel, "time,s"], [ylabel, "A inspiral"] ,[gnuplot_preamble,p]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+/*hins:hre-i*him;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+/* Определяем функцию t(x) */
+t(x) := x^3 - x$
+
+/* Находим обратную функцию x(t) */
+solution: solve(t = t(x), x)$
+
+/* Выводим результат */
+solution$
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+sol: solve(0 = tres(z), z)$
+sol$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+tres;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Сравнение
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: section start ]
+
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+сначала проведем визуалное сравнение
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([ [discrete,points_list],[discrete,points_an]],[x,0,12],
+           [style,[lines,4]],[y,0,600],[ylabel,"x"],
+           [xlabel,"t, s"],[legend,"analytical sol","numerical sol"], [gnuplot_preamble,p])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+length(phi_an);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Calculating the binaries separation
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: input   start ] */
+fGW : map(lambda([x], cons(x[1], cons(x[2]/%pi, rest(rest(x))))), omega)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+define(omega(z), omega)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+omega(Tfin)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Tfin;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxdraw2d(explicit(omega(z), z, xlow, 0.3));
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+l100
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+;
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 25.01.0"$
